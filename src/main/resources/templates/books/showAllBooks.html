@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>List Books</title>
+</head>
+<body>
+
+<!-- Если есть постраничная навигация -->
+<div th:if="${bookPage != null}">
+    <div th:each="book : ${bookPage.content}">
+        <p>
+            <a th:href="@{/books/{id}(id=${book.id})}" th:text="${book.name}">Название</a>
+            <span th:text="${book.author}">Автор</span>
+            <span th:text="${book.year}">Год выпуска</span>
+        </p>
+    </div>
+
+    <!-- Навигация -->
+    <a th:href="@{/books(page=${bookPage.number - 1}, size=${bookPage.size}, sort_by_year=${sort})}"
+       th:if="${bookPage.hasPrevious()}">⬅ Назад</a>
+
+    <span>Страница [[${bookPage.number + 1}]] из [[${bookPage.totalPages}]]</span>
+
+    <a th:href="@{/books(page=${bookPage.number + 1}, size=${bookPage.size}, sort_by_year=${sort})}"
+       th:if="${bookPage.hasNext()}">Вперёд ➡</a>
+</div>
+
+<!-- Если пагинации нет, выводим все книги -->
+<div th:if="${books != null}">
+    <div th:each="book : ${books}">
+        <p>
+            <a th:href="@{/books/{id}(id=${book.id})}" th:text="${book.name}">Название</a>
+            <span th:text="${book.author}">Автор</span>
+            <span th:text="${book.year}">Год выпуска</span>
+        </p>
+    </div>
+</div>
+
+<hr/>
+<form th:action="@{/books/new}" method="get">
+    <button type="submit">➕ Добавить книгу</button>
+</form>
+
+</body>
+</html>
